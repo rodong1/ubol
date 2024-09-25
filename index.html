@@ -17,10 +17,6 @@
             font-size: 60px; 
             color: aqua;
         }
-        a {
-            text-decoration: none; 
-            color: aqua; 
-        }
         #inPut_box {
             text-align: center;
             margin-top: 40px; 
@@ -87,12 +83,10 @@
                         }
                     });
 
-                    // 더블 클릭 / 두 번 터치 삭제 이벤트
                     let lastTouchTime = 0;
                     newItem.addEventListener('touchend', function(event) {
                         const currentTime = new Date().getTime();
                         if (currentTime - lastTouchTime <= 300) {
-                            // 두 번 터치 인식
                             tasks[date] = tasks[date].filter(t => t.text !== task.text);
                             localStorage.setItem('tasks', JSON.stringify(tasks)); 
                             displayTasks(date);
