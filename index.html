@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>유볼사랑해</title>
+    <style>
+        body {
+            background-image: url('ubol3.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+        }
+       
+        h1 {
+            text-align: center;
+            font-size: 60px; 
+            color: aqua;
+        }
+        a {
+            text-decoration: none; 
+            color: aqua; 
+        }
+        #inPut_box {
+            text-align: center;
+            margin-top: 40px; 
+        }
+        #output {
+            text-align: center;
+            margin-top: 20px; 
+        }
+        ul { 
+            list-style-type: none; 
+            padding: 0;
+        }
+        li {
+            cursor: pointer; 
+        }
+    </style>
+    <script>
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || {}; 
+        let selectedDate = ''; 
+
+        function showInput() {
+            const inputText = document.getElementById('inputText').value;
+
+            if (!selectedDate) {
+                alert('날짜를 먼저 선택하세요!');
+                return;
+            }
+
+            if (inputText.trim() !== '') {
+                const newItem = {
+                    text: inputText,
+                };
+
+                if (!tasks[selectedDate]) {
+                    tasks[selectedDate] = [];
+                }
+                tasks[selectedDate].push(newItem);
+
+                document.getElementById('inputText').value = '';
+
+                localStorage.setItem('tasks', JSON.stringify(tasks)); 
+                displayTasks(selectedDate);
+            } else {
+                alert('텍스트를 입력하세요!');
+            }
+        }
+
+        function displayTasks(date) {
+            const list = document.getElementById('list');
+            list.innerHTML = '';
+
+            if (tasks[date]) {
+                tasks[date].forEach(task => {
+                    const newItem = document.createElement('li');
+                    newItem.textContent = task.text;
+
+                    newItem.addEventListener('click', function() {
+                        if (newItem.style.color === 'red') {
+                            newItem.style.color = '';
+                            newItem.style.textDecoration = '';
+                        } else {
+                            newItem.style.color = 'red';
+                            newItem.style.textDecoration = 'line-through';
+                        }
+                    });
+
+                    // 더블 클릭 / 두 번 터치 삭제 이벤트
+                    let lastTouchTime = 0;
+                    newItem.addEventListener('touchend', function(event) {
+                        const currentTime = new Date().getTime();
+                        if (currentTime - lastTouchTime <= 300) {
+                            // 두 번 터치 인식
+                            tasks[date] = tasks[date].filter(t => t.text !== task.text);
+                            localStorage.setItem('tasks', JSON.stringify(tasks)); 
+                            displayTasks(date);
+                        }
+                        lastTouchTime = currentTime;
+                    });
+
+                    newItem.addEventListener('dblclick', function() {
+                        tasks[date] = tasks[date].filter(t => t.text !== task.text);
+                        localStorage.setItem('tasks', JSON.stringify(tasks)); 
+                        displayTasks(date);
+                    });
+
+                    list.appendChild(newItem);
+                });
+            } else {
+                const noTasksItem = document.createElement('li');
+                noTasksItem.textContent = '여보 오늘 모해?';
+                list.appendChild(noTasksItem);
+            }
+        }
+
+        function selectDate() {
+            selectedDate = document.getElementById('inputDate').value;
+            displayTasks(selectedDate);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputField = document.getElementById('inputText');
+            inputField.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    showInput();
+                }
+            });
+        });
+    </script>
+</head>
+<body> 
+    <h1>유볼의 하루</h1>
+    <div id="output">
+        <input type="date" id="inputDate" onchange="selectDate()">
+        <ul id="list"></ul>
+    </div>
+    <div id="inPut_box">
+        <input type="text" id="inputText" style="width:30%" placeholder="유볼♡로동">
+        <input type="button" style="margin-left: 10px;" value="+" onclick="showInput()">
+    </div>
+</body>
+</html>
