@@ -10,21 +10,30 @@
             background-position: center;
             background-repeat: no-repeat;
             color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
         }
-       
+
         h1 {
             text-align: center;
             font-size: 60px; 
             color: aqua;
         }
+        
+        #output {
+            flex: 1; /* 나머지 공간을 차지하도록 설정 */
+            text-align: center;
+            overflow-y: auto; /* 스크롤 가능하게 설정 */
+        }
+
         #inPut_box {
             text-align: center;
-            margin-top: 40px; 
+            padding: 10px; /* 여백 추가 */
+            background: rgba(0, 0, 0, 0.5); /* 배경색 추가 */
         }
-        #output {
-            text-align: center;
-            margin-top: 20px; 
-        }
+
         ul { 
             list-style-type: none; 
             padding: 0;
